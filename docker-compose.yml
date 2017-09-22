@@ -1,0 +1,33 @@
+serveur: #nom du container
+  build: /Users/anthonyba/TDJs2209LPDW #image utilisé par le container
+  links:
+    - maria_db:db
+  ports:
+    - 8180:80
+  volumes:
+    - /Users/anthonyba/TDJs2209LPDW:/usr/src/app
+  environment :
+    DB_ENV_MYSQL_USER: root
+    DB_ENV_MYSQL_PASSWORD: docker
+    BUILD_STAGE: docker-compose
+maria_db: #nom
+  container_name: mariadb
+  image: mariadb
+  volumes:
+   - /Users/anthonyba/TDJs2209LPDW/sql/bdd.sql:/docker-entrypoint-initdb.d/bdd.sql
+  environment:
+    MYSQL_ROOT_PASSWORD: docker
+    MYSQL_DATABASE: node
+  ports:
+    - 3306:3306
+  expose:
+    - "3306"
+phpmyadmin:
+  image: phpmyadmin/phpmyadmin
+  links:
+    - maria_db:db
+  ports:
+    - 8181:80
+  environment:
+    PMA_USER: root
+    PMA_PASSWORD: docker
